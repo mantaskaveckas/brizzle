@@ -35,8 +35,16 @@
     "cli",
     "codegen"
   ],
-  "author": "",
+  "author": "mantaskaveckas",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mantaskaveckas/nextjs-drizzle-gen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mantaskaveckas/nextjs-drizzle-gen/issues"
+  },
+  "homepage": "https://github.com/mantaskaveckas/nextjs-drizzle-gen#readme",
   "dependencies": {
     "commander": "^14.0.2"
   },
