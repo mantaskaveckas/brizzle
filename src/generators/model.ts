@@ -21,7 +21,7 @@ import {
   Field,
   GeneratorOptions,
   Dialect,
-} from "../utils";
+} from "../lib";
 
 export function generateModel(name: string, fieldArgs: string[], options: GeneratorOptions = {}): void {
   validateModelName(name);

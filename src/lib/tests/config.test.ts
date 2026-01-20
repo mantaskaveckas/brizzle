@@ -8,7 +8,7 @@ import {
   getDbImport,
   getSchemaImport,
   resetProjectConfig,
-} from "../src/utils";
+} from "..";
 
 describe("detectProjectConfig", () => {
   const mockCwd = "/test/project";

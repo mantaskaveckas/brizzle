@@ -4,8 +4,8 @@ import * as path from "path";
 
 vi.mock("fs");
 
-import { destroyScaffold, destroyResource, destroyApi } from "../../src/generators/destroy";
-import { resetProjectConfig } from "../../src/utils";
+import { destroyScaffold, destroyResource, destroyApi } from "../destroy";
+import { resetProjectConfig } from "../../lib";
 
 describe("destroy generators", () => {
   const mockCwd = "/test/project";

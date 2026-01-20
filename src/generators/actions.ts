@@ -8,7 +8,7 @@ import {
   getSchemaImport,
   GeneratorOptions,
   ModelContext,
-} from "../utils";
+} from "../lib";
 
 export function generateActions(name: string, options: GeneratorOptions = {}): void {
   validateModelName(name);
@@ -21,14 +21,15 @@ export function generateActions(name: string, options: GeneratorOptions = {}): v
     "actions.ts"
   );
 
-  const content = generateActionsContent(ctx);
+  const content = generateActionsContent(ctx, options);
   writeFile(actionsPath, content, options);
 }
 
-function generateActionsContent(ctx: ModelContext): string {
+function generateActionsContent(ctx: ModelContext, options: GeneratorOptions = {}): string {
   const { pascalName, pascalPlural, camelPlural, kebabPlural } = ctx;
   const dbImport = getDbImport();
   const schemaImport = getSchemaImport();
+  const idType = options.uuid ? "string" : "number";
 
   return `"use server";
 
@@ -44,7 +45,7 @@ export async function get${pascalPlural}() {
   return db.select().from(${camelPlural}).orderBy(desc(${camelPlural}.createdAt));
 }
 
-export async function get${pascalName}(id: number) {
+export async function get${pascalName}(id: ${idType}) {
   const result = await db
     .select()
     .from(${camelPlural})
@@ -60,7 +61,7 @@ export async function create${pascalName}(data: Omit<New${pascalName}, "id" | "c
 }
 
 export async function update${pascalName}(
-  id: number,
+  id: ${idType},
   data: Partial<Omit<New${pascalName}, "id" | "createdAt" | "updatedAt">>
 ) {
   const result = await db
@@ -72,7 +73,7 @@ export async function update${pascalName}(
   return result[0];
 }
 
-export async function delete${pascalName}(id: number) {
+export async function delete${pascalName}(id: ${idType}) {
   await db.delete(${camelPlural}).where(eq(${camelPlural}.id, id));
   revalidatePath("/${kebabPlural}");
 }

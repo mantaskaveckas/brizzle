@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("../../src/generators/model", () => ({
+vi.mock("../model", () => ({
   generateModel: vi.fn(),
 }));
 
-vi.mock("../../src/generators/actions", () => ({
+vi.mock("../actions", () => ({
   generateActions: vi.fn(),
 }));
 
-import { generateResource } from "../../src/generators/resource";
-import { generateModel } from "../../src/generators/model";
-import { generateActions } from "../../src/generators/actions";
+import { generateResource } from "../resource";
+import { generateModel } from "../model";
+import { generateActions } from "../actions";
 
 describe("generateResource", () => {
   beforeEach(() => {

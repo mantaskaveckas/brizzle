@@ -7,7 +7,7 @@ import {
   detectProjectConfig,
   log,
   GeneratorOptions,
-} from "../utils";
+} from "../lib";
 
 export function destroyScaffold(name: string, options: GeneratorOptions = {}): void {
   validateModelName(name);

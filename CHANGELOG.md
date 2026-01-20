@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-01-20
+## [0.2.0] - 2026-01-20
+
+### Fixed
+
+- `modelExistsInSchema()` now detects PostgreSQL (`pgTable`) and MySQL (`mysqlTable`) tables, not just SQLite
+- Scaffold pages now validate numeric IDs before database queries (returns 404 for invalid IDs like `/posts/abc`)
+- Actions generator now uses correct ID type (`string` for UUID, `number` for auto-increment)
+- API routes now use correct ID type based on `--uuid` flag
+
+### Changed
+
+- API routes now log errors with route context (e.g., `GET /api/posts failed:`)
+- API routes return 400 for invalid JSON in request body
+- API routes return 400 for invalid ID format (non-numeric when expecting number)
+- Refactored `utils.ts` into modular `src/lib/` structure for better maintainability
+- Colocated tests with source code (`src/**/tests/`)
+
+## [0.1.0] - 2026-01-20
 
 ### Added
 

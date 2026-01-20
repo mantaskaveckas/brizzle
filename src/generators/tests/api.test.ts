@@ -4,12 +4,12 @@ import * as path from "path";
 
 vi.mock("fs");
 
-vi.mock("../../src/generators/model", () => ({
+vi.mock("../model", () => ({
   generateModel: vi.fn(),
 }));
 
-import { generateApi } from "../../src/generators/api";
-import { resetProjectConfig } from "../../src/utils";
+import { generateApi } from "../api";
+import { resetProjectConfig } from "../../lib";
 
 describe("generateApi", () => {
   const mockCwd = "/test/project";
@@ -123,7 +123,8 @@ describe("generateApi", () => {
 
       expect(content).toContain("export async function GET(request: Request, { params }: Params)");
       expect(content).toContain("const { id } = await params");
-      expect(content).toContain("where(eq(posts.id, parseInt(id)))");
+      expect(content).toContain("const numericId = Number(id)");
+      expect(content).toContain("where(eq(posts.id, numericId))");
       expect(content).toContain("limit(1)");
       expect(content).toContain("status: 404");
     });
@@ -145,8 +146,54 @@ describe("generateApi", () => {
       const content = getWrittenFile("[id]/route.ts");
 
       expect(content).toContain("export async function DELETE(request: Request, { params }: Params)");
-      expect(content).toContain("db.delete(posts).where(eq(posts.id, parseInt(id)))");
+      expect(content).toContain("db.delete(posts).where(eq(posts.id, numericId))");
       expect(content).toContain("status: 204");
+    });
+  });
+
+  describe("error handling", () => {
+    it("logs errors with route context", () => {
+      generateApi("post", ["title:string"]);
+
+      const collectionContent = getWrittenFile("route.ts");
+      const memberContent = getWrittenFile("[id]/route.ts");
+
+      expect(collectionContent).toContain('console.error("GET /api/posts failed:", error)');
+      expect(collectionContent).toContain('console.error("POST /api/posts failed:", error)');
+      expect(memberContent).toContain('console.error("GET /api/posts/[id] failed:", error)');
+      expect(memberContent).toContain('console.error("PATCH /api/posts/[id] failed:", error)');
+      expect(memberContent).toContain('console.error("DELETE /api/posts/[id] failed:", error)');
+    });
+
+    it("handles JSON parse errors in POST", () => {
+      generateApi("post", ["title:string"]);
+
+      const content = getWrittenFile("route.ts");
+
+      expect(content).toContain("if (error instanceof SyntaxError)");
+      expect(content).toContain("Invalid JSON in request body");
+      expect(content).toContain("status: 400");
+    });
+
+    it("validates numeric ID format", () => {
+      generateApi("post", ["title:string"]);
+
+      const content = getWrittenFile("[id]/route.ts");
+
+      expect(content).toContain("const numericId = Number(id)");
+      expect(content).toContain("if (isNaN(numericId))");
+      expect(content).toContain("Invalid ID format");
+      expect(content).toContain("status: 400");
+    });
+
+    it("skips ID validation for UUID mode", () => {
+      generateApi("post", ["title:string"], { uuid: true });
+
+      const content = getWrittenFile("[id]/route.ts");
+
+      expect(content).not.toContain("numericId");
+      expect(content).not.toContain("isNaN");
+      expect(content).toContain("where(eq(posts.id, id))");
     });
   });
 

@@ -6,8 +6,8 @@ import * as path from "path";
 vi.mock("fs");
 
 // Import after mocking
-import { generateModel } from "../../src/generators/model";
-import { resetProjectConfig } from "../../src/utils";
+import { generateModel } from "../model";
+import { resetProjectConfig } from "../../lib";
 
 describe("generateModel", () => {
   const mockCwd = "/test/project";

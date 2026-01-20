@@ -5,7 +5,7 @@ import { generateScaffold } from "./generators/scaffold";
 import { generateResource } from "./generators/resource";
 import { generateApi } from "./generators/api";
 import { destroyScaffold, destroyResource, destroyApi } from "./generators/destroy";
-import { log, detectProjectConfig, detectDialect } from "./utils";
+import { log, detectProjectConfig, detectDialect } from "./lib";
 
 function handleError(error: unknown): void {
   if (error instanceof Error) {

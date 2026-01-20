@@ -5,7 +5,7 @@ import {
   createModelContext,
   log,
   GeneratorOptions,
-} from "../utils";
+} from "../lib";
 
 export function generateResource(name: string, fieldArgs: string[], options: GeneratorOptions = {}): void {
   validateModelName(name);

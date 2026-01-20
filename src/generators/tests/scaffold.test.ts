@@ -5,16 +5,16 @@ import * as path from "path";
 vi.mock("fs");
 
 // Need to mock model and actions generators since scaffold calls them
-vi.mock("../../src/generators/model", () => ({
+vi.mock("../model", () => ({
   generateModel: vi.fn(),
 }));
 
-vi.mock("../../src/generators/actions", () => ({
+vi.mock("../actions", () => ({
   generateActions: vi.fn(),
 }));
 
-import { generateScaffold } from "../../src/generators/scaffold";
-import { resetProjectConfig } from "../../src/utils";
+import { generateScaffold } from "../scaffold";
+import { resetProjectConfig } from "../../lib";
 
 describe("generateScaffold", () => {
   const mockCwd = "/test/project";

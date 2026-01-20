@@ -12,7 +12,7 @@ import {
   Field,
   GeneratorOptions,
   ModelContext,
-} from "../utils";
+} from "../lib";
 
 export function generateScaffold(name: string, fieldArgs: string[], options: GeneratorOptions = {}): void {
   validateModelName(name);
@@ -53,14 +53,14 @@ function generatePages(ctx: ModelContext, fields: Field[], options: GeneratorOpt
   // Show/Edit page
   writeFile(
     path.join(basePath, "[id]", "page.tsx"),
-    generateShowPage(pascalName, pascalPlural, camelName, kebabPlural, fields),
+    generateShowPage(pascalName, pascalPlural, camelName, kebabPlural, fields, options),
     options
   );
 
   // Edit page
   writeFile(
     path.join(basePath, "[id]", "edit", "page.tsx"),
-    generateEditPage(pascalName, camelName, kebabPlural, fields),
+    generateEditPage(pascalName, camelName, kebabPlural, fields, options),
     options
   );
 }
@@ -185,8 +185,17 @@ function generateShowPage(
   _pascalPlural: string,
   camelName: string,
   kebabPlural: string,
-  fields: Field[]
+  fields: Field[],
+  options: GeneratorOptions = {}
 ): string {
+  const idHandling = options.uuid
+    ? `const ${camelName} = await get${pascalName}(id);`
+    : `const numericId = Number(id);
+  if (isNaN(numericId)) {
+    notFound();
+  }
+  const ${camelName} = await get${pascalName}(numericId);`;
+
   return `import { notFound } from "next/navigation";
 import Link from "next/link";
 import { get${pascalName} } from "../actions";
@@ -197,7 +206,7 @@ export default async function ${pascalName}Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const ${camelName} = await get${pascalName}(parseInt(id));
+  ${idHandling}
 
   if (!${camelName}) {
     notFound();
@@ -247,8 +256,19 @@ function generateEditPage(
   pascalName: string,
   camelName: string,
   kebabPlural: string,
-  fields: Field[]
+  fields: Field[],
+  options: GeneratorOptions = {}
 ): string {
+  const idHandling = options.uuid
+    ? `const ${camelName} = await get${pascalName}(id);`
+    : `const numericId = Number(id);
+  if (isNaN(numericId)) {
+    notFound();
+  }
+  const ${camelName} = await get${pascalName}(numericId);`;
+
+  const updateId = options.uuid ? "id" : "numericId";
+
   return `import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { get${pascalName}, update${pascalName} } from "../../actions";
@@ -259,7 +279,7 @@ export default async function Edit${pascalName}Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const ${camelName} = await get${pascalName}(parseInt(id));
+  ${idHandling}
 
   if (!${camelName}) {
     notFound();
@@ -267,7 +287,7 @@ export default async function Edit${pascalName}Page({
 
   async function handleUpdate(formData: FormData) {
     "use server";
-    await update${pascalName}(parseInt(id), {
+    await update${pascalName}(${updateId}, {
 ${fields.map((f) => `      ${f.name}: ${formDataValue(f)},`).join("\n")}
     });
     redirect("/${kebabPlural}");

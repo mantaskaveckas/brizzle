@@ -9,7 +9,7 @@ import {
   getSchemaImport,
   log,
   GeneratorOptions,
-} from "../utils";
+} from "../lib";
 
 export function generateApi(name: string, fieldArgs: string[], options: GeneratorOptions = {}): void {
   validateModelName(name);
@@ -32,18 +32,18 @@ function generateRoutes(camelPlural: string, kebabPlural: string, options: Gener
 
   writeFile(
     path.join(basePath, "route.ts"),
-    generateCollectionRoute(camelPlural),
+    generateCollectionRoute(camelPlural, kebabPlural),
     options
   );
 
   writeFile(
     path.join(basePath, "[id]", "route.ts"),
-    generateMemberRoute(camelPlural),
+    generateMemberRoute(camelPlural, kebabPlural, options),
     options
   );
 }
 
-function generateCollectionRoute(camelPlural: string): string {
+function generateCollectionRoute(camelPlural: string, kebabPlural: string): string {
   const dbImport = getDbImport();
   const schemaImport = getSchemaImport();
 
@@ -60,7 +60,8 @@ export async function GET() {
       .orderBy(desc(${camelPlural}.createdAt));
 
     return NextResponse.json(data);
-  } catch {
+  } catch (error) {
+    console.error("GET /api/${kebabPlural} failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch records" },
       { status: 500 }
@@ -74,7 +75,14 @@ export async function POST(request: Request) {
     const result = await db.insert(${camelPlural}).values(body).returning();
 
     return NextResponse.json(result[0], { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("POST /api/${kebabPlural} failed:", error);
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to create record" },
       { status: 500 }
@@ -84,9 +92,22 @@ export async function POST(request: Request) {
 `;
 }
 
-function generateMemberRoute(camelPlural: string): string {
+function generateMemberRoute(camelPlural: string, kebabPlural: string, options: GeneratorOptions = {}): string {
   const dbImport = getDbImport();
   const schemaImport = getSchemaImport();
+
+  const idValidation = options.uuid
+    ? ""
+    : `
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      return NextResponse.json(
+        { error: "Invalid ID format" },
+        { status: 400 }
+      );
+    }`;
+
+  const idValue = options.uuid ? "id" : "numericId";
 
   return `import { db } from "${dbImport}";
 import { ${camelPlural} } from "${schemaImport}";
@@ -97,11 +118,11 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const { id } = await params;
+    const { id } = await params;${idValidation}
     const result = await db
       .select()
       .from(${camelPlural})
-      .where(eq(${camelPlural}.id, parseInt(id)))
+      .where(eq(${camelPlural}.id, ${idValue}))
       .limit(1);
 
     if (!result[0]) {
@@ -112,7 +133,8 @@ export async function GET(request: Request, { params }: Params) {
     }
 
     return NextResponse.json(result[0]);
-  } catch {
+  } catch (error) {
+    console.error("GET /api/${kebabPlural}/[id] failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch record" },
       { status: 500 }
@@ -122,12 +144,12 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function PATCH(request: Request, { params }: Params) {
   try {
-    const { id } = await params;
+    const { id } = await params;${idValidation}
     const body = await request.json();
     const result = await db
       .update(${camelPlural})
       .set({ ...body, updatedAt: new Date() })
-      .where(eq(${camelPlural}.id, parseInt(id)))
+      .where(eq(${camelPlural}.id, ${idValue}))
       .returning();
 
     if (!result[0]) {
@@ -138,7 +160,14 @@ export async function PATCH(request: Request, { params }: Params) {
     }
 
     return NextResponse.json(result[0]);
-  } catch {
+  } catch (error) {
+    console.error("PATCH /api/${kebabPlural}/[id] failed:", error);
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to update record" },
       { status: 500 }
@@ -148,11 +177,12 @@ export async function PATCH(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const { id } = await params;
-    await db.delete(${camelPlural}).where(eq(${camelPlural}.id, parseInt(id)));
+    const { id } = await params;${idValidation}
+    await db.delete(${camelPlural}).where(eq(${camelPlural}.id, ${idValue}));
 
     return new NextResponse(null, { status: 204 });
-  } catch {
+  } catch (error) {
+    console.error("DELETE /api/${kebabPlural}/[id] failed:", error);
     return NextResponse.json(
       { error: "Failed to delete record" },
       { status: 500 }

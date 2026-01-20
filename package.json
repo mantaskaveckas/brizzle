@@ -1,6 +1,6 @@
 {
   "name": "nextjs-drizzle-gen",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Rails-like generators for Next.js + Drizzle ORM projects",
   "type": "module",
   "bin": {

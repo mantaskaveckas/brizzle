@@ -4,8 +4,8 @@ import * as path from "path";
 
 vi.mock("fs");
 
-import { generateActions } from "../../src/generators/actions";
-import { resetProjectConfig } from "../../src/utils";
+import { generateActions } from "../actions";
+import { resetProjectConfig } from "../../lib";
 
 describe("generateActions", () => {
   const mockCwd = "/test/project";
