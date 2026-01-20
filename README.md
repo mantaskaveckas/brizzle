@@ -1,6 +1,6 @@
 # nextjs-drizzle-gen
 
-[![CI](https://github.com/mantaskaveckas/nextjs-drizzle-gen/actions/workflows/ci.yml/badge.svg)](https://github.com/mantaskaveckas/nextjs-drizzle-gen/actions/workflows/ci.yml)
+[![CI](https://github.com/mantaskaveckas/nextjs-drizzle-gen/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mantaskaveckas/nextjs-drizzle-gen/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/nextjs-drizzle-gen)](https://www.npmjs.com/package/nextjs-drizzle-gen)
 [![npm downloads](https://img.shields.io/npm/dm/nextjs-drizzle-gen)](https://www.npmjs.com/package/nextjs-drizzle-gen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
