@@ -1,4 +1,5 @@
 import { program } from "commander";
+import { createRequire } from "module";
 import { generateModel } from "./generators/model";
 import { generateActions } from "./generators/actions";
 import { generateScaffold } from "./generators/scaffold";
@@ -6,6 +7,9 @@ import { generateResource } from "./generators/resource";
 import { generateApi } from "./generators/api";
 import { destroyScaffold, destroyResource, destroyApi } from "./generators/destroy";
 import { log, detectProjectConfig, detectDialect } from "./lib";
+
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
 
 function handleError(error: unknown): void {
   if (error instanceof Error) {
@@ -19,7 +23,7 @@ function handleError(error: unknown): void {
 program
   .name("drizzle-gen")
   .description("Rails-like generators for Next.js + Drizzle")
-  .version("0.1.0");
+  .version(version);
 
 // ============================================================================
 // Generate commands
