@@ -2,6 +2,8 @@
 
 Rails-like generators for Next.js + Drizzle ORM projects. Generate models, server actions, CRUD pages, and API routes with a single command.
 
+[**Documentation**](https://mantaskaveckas.github.io/nextjs-drizzle-gen/)
+
 ## Installation
 
 ```bash
