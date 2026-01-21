@@ -5,7 +5,11 @@ sidebar_position: 1
 slug: /
 ---
 
-# brizzle
+<div style={{textAlign: 'center'}}>
+  <img src="/brizzle/img/logo.png" alt="brizzle logo" width="120" />
+</div>
+
+<h1 align="center">brizzle</h1>
 
 Rails-like generators for Next.js + Drizzle ORM projects. Generate models, server actions, CRUD pages, and API routes with a single command.
 
