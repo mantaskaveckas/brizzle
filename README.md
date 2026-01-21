@@ -6,9 +6,10 @@
 
 <p align="center">
   <a href="https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml"><img src="https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-[![npm version](https://img.shields.io/npm/v/brizzle)](https://www.npmjs.com/package/brizzle)
-[![npm downloads](https://img.shields.io/npm/dm/brizzle)](https://www.npmjs.com/package/brizzle)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  <a href="https://www.npmjs.com/package/brizzle"><img src="https://img.shields.io/npm/v/brizzle" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/brizzle"><img src="https://img.shields.io/npm/dm/brizzle" alt="npm downloads"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
 
 Rails-like generators for Next.js + Drizzle ORM projects. Generate models, server actions, CRUD pages, and API routes with a single command.
 
