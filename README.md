@@ -1,6 +1,11 @@
-# brizzle
+<p align="center">
+  <img src="assets/logo.png" alt="brizzle logo" width="120" />
+</p>
 
-[![CI](https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml)
+<h1 align="center">brizzle</h1>
+
+<p align="center">
+  <a href="https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml"><img src="https://github.com/mantaskaveckas/brizzle/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
 [![npm version](https://img.shields.io/npm/v/brizzle)](https://www.npmjs.com/package/brizzle)
 [![npm downloads](https://img.shields.io/npm/dm/brizzle)](https://www.npmjs.com/package/brizzle)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
