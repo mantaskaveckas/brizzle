@@ -1,6 +1,6 @@
 {
   "name": "brizzle",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Rails-like generators for Next.js + Drizzle ORM projects",
   "type": "module",
   "bin": {
