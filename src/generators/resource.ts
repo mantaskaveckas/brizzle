@@ -1,6 +1,12 @@
 import { generateModel } from "./model";
 import { generateActions } from "./actions";
-import { validateModelName, createModelContext, log, GeneratorOptions } from "../lib";
+import {
+  validateModelName,
+  createModelContext,
+  getRunCommand,
+  log,
+  GeneratorOptions,
+} from "../lib";
 
 /**
  * Generates a resource (model + actions) without UI pages.
@@ -30,7 +36,8 @@ export function generateResource(
   generateModel(ctx.singularName, fieldArgs, options);
   generateActions(ctx.singularName, options);
 
+  const run = getRunCommand();
   log.info(`\nNext steps:`);
-  log.info(`  1. Run 'pnpm db:push' to update the database`);
+  log.info(`  1. Run '${run} db:push' to update the database`);
   log.info(`  2. Create pages in app/${ctx.kebabPlural}/`);
 }

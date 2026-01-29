@@ -6,6 +6,7 @@ import { generateScaffold } from "./generators/scaffold";
 import { generateResource } from "./generators/resource";
 import { generateApi } from "./generators/api";
 import { destroyScaffold, destroyResource, destroyApi } from "./generators/destroy";
+import { generateInit } from "./generators/init";
 import { log, detectProjectConfig, detectDialect, GeneratorOptions, DestroyType } from "./lib";
 
 const require = createRequire(import.meta.url);
@@ -214,6 +215,45 @@ program
     console.log(`  DB:     ${config.alias}/${config.dbPath.replace(/^src\//, "")}`);
     console.log(`  Schema: ${config.alias}/${config.dbPath.replace(/^src\//, "")}/schema`);
     console.log();
+  });
+
+// ============================================================================
+// Init command
+// ============================================================================
+
+program
+  .command("init")
+  .description(
+    `Initialize Drizzle ORM in your Next.js project
+
+  Interactive setup wizard that configures:
+    - Database dialect (SQLite, PostgreSQL, MySQL)
+    - Database driver selection
+    - drizzle.config.ts
+    - Database client export (db/index.ts)
+    - Schema file (db/schema.ts)
+    - Environment variables template
+
+  Examples:
+    brizzle init
+    brizzle init --dry-run
+    brizzle init --dialect postgresql --driver postgres
+    brizzle init --dialect sqlite --driver better-sqlite3 --no-install`
+  )
+  .option("-f, --force", "Overwrite existing files without prompting")
+  .option("-n, --dry-run", "Preview changes without writing files")
+  .option(
+    "-d, --dialect <dialect>",
+    "Database dialect for non-interactive mode (sqlite, postgresql, mysql)"
+  )
+  .option("--driver <driver>", "Database driver for non-interactive mode")
+  .option("--no-install", "Skip automatic dependency installation")
+  .action(async (opts) => {
+    try {
+      await generateInit(opts);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
 program.parse();

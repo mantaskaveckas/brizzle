@@ -165,6 +165,53 @@ describe("generateActions", () => {
     });
   });
 
+  describe("MySQL dialect", () => {
+    beforeEach(() => {
+      // Mock drizzle.config.ts to return MySQL dialect
+      vi.mocked(fs.existsSync).mockImplementation((p) => {
+        if (String(p).endsWith("drizzle.config.ts")) return true;
+        return false;
+      });
+      vi.mocked(fs.readFileSync).mockImplementation((p) => {
+        if (String(p).endsWith("drizzle.config.ts")) {
+          return 'dialect: "mysql"';
+        }
+        return "";
+      });
+    });
+
+    it("uses $returningId() instead of returning() for create", () => {
+      generateActions("post");
+
+      const content = getWrittenContent();
+
+      expect(content).toContain(".$returningId()");
+      expect(content).not.toContain(".returning()");
+    });
+
+    it("fetches record after insert for create", () => {
+      generateActions("post");
+
+      const content = getWrittenContent();
+
+      expect(content).toContain(
+        "const inserted = await db.insert(posts).values(data).$returningId()"
+      );
+      expect(content).toContain("where(eq(posts.id, inserted[0].id))");
+    });
+
+    it("fetches record after update", () => {
+      generateActions("post");
+
+      const content = getWrittenContent();
+
+      // Update should not use returning()
+      expect(content).toMatch(/\.update\(posts\)[\s\S]*\.set\(/);
+      // Should fetch after update
+      expect(content).toMatch(/await db\s*\.update[\s\S]*await db\s*\.select/);
+    });
+  });
+
   // Helper function
   function getWrittenContent(): string {
     const call = vi.mocked(fs.writeFileSync).mock.calls[0];

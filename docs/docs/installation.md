@@ -28,9 +28,26 @@ Run without installing:
 npx brizzle scaffold post title:string body:text
 ```
 
-## Project Requirements
+## Quick Setup with brizzle init
 
-Before using brizzle, ensure your project has:
+The easiest way to set up Drizzle ORM is using the init command:
+
+```bash
+npx brizzle init
+```
+
+This interactive wizard will:
+- Ask you to choose a database dialect (SQLite, PostgreSQL, MySQL)
+- Let you select a database driver
+- Generate all necessary configuration files
+- Install required dependencies
+- Add helper scripts to package.json
+
+See [brizzle init](/generators/init) for full documentation.
+
+## Manual Setup
+
+If you prefer to set up Drizzle ORM manually, ensure your project has:
 
 ### 1. Next.js with App Router
 

@@ -7,6 +7,7 @@ import {
   getAppPath,
   getDbImport,
   getSchemaImport,
+  getRunCommand,
   log,
   GeneratorOptions,
 } from "../lib";
@@ -39,8 +40,9 @@ export function generateApi(
   generateModel(ctx.singularName, fieldArgs, options);
   generateRoutes(ctx.camelPlural, ctx.kebabPlural, options);
 
+  const run = getRunCommand();
   log.info(`\nNext steps:`);
-  log.info(`  1. Run 'pnpm db:push' to update the database`);
+  log.info(`  1. Run '${run} db:push' to update the database`);
   log.info(`  2. API available at /api/${ctx.kebabPlural}`);
 }
 

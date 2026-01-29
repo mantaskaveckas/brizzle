@@ -8,6 +8,7 @@ import {
   validateModelName,
   createModelContext,
   getAppPath,
+  getRunCommand,
   log,
   Field,
   GeneratorOptions,
@@ -41,9 +42,10 @@ export function generateScaffold(
   generateActions(ctx.singularName, options);
   generatePages(ctx, fields, options);
 
+  const run = getRunCommand();
   log.info(`\nNext steps:`);
-  log.info(`  1. Run 'pnpm db:push' to update the database`);
-  log.info(`  2. Run 'pnpm dev' and visit /${ctx.kebabPlural}`);
+  log.info(`  1. Run '${run} db:push' to update the database`);
+  log.info(`  2. Run '${run} dev' and visit /${ctx.kebabPlural}`);
 }
 
 function generatePages(ctx: ModelContext, fields: Field[], options: GeneratorOptions = {}): void {

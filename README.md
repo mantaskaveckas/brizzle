@@ -30,6 +30,9 @@ npx brizzle scaffold post title:string body:text
 ## Quick Start
 
 ```bash
+# Initialize Drizzle ORM in your project
+npx brizzle init
+
 # Generate a full CRUD scaffold (model + actions + pages)
 brizzle scaffold post title:string body:text published:boolean
 
@@ -47,6 +50,24 @@ brizzle actions post
 ```
 
 ## Commands
+
+### `brizzle init`
+
+Interactive setup wizard for Drizzle ORM. Configures your database connection and generates all necessary files.
+
+```bash
+brizzle init
+```
+
+Supports:
+- **SQLite**: better-sqlite3, libsql (Turso), bun:sqlite
+- **PostgreSQL**: postgres.js, pg, neon, vercel-postgres
+- **MySQL**: mysql2, planetscale
+
+Options:
+- `--dialect <dialect>` - Database dialect for non-interactive mode
+- `--driver <driver>` - Database driver for non-interactive mode
+- `--no-install` - Skip automatic dependency installation
 
 ### `brizzle model <name> [fields...]`
 
@@ -179,11 +200,11 @@ Next steps:
 
 - Node.js >= 18
 - Next.js project with App Router
-- Drizzle ORM configured
+- Drizzle ORM configured (or run `brizzle init` to set it up)
 
 ## Roadmap
 
-- [ ] **Drizzle init** - `brizzle init` to set up Drizzle ORM, database config, and db connection
+- [x] **Drizzle init** - `brizzle init` to set up Drizzle ORM, database config, and db connection
 - [ ] **Authentication** - `brizzle auth` to generate [better-auth](https://www.better-auth.com/) setup with user model and sign-in/sign-up pages
 - [ ] **Zod schemas** - Generate validation schemas for forms and API routes
 - [ ] **Indexes** - Support for `name:string:index` field modifier

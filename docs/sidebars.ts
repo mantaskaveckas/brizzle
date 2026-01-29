@@ -8,6 +8,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Generators",
       items: [
+        "generators/init",
         "generators/model",
         "generators/actions",
         "generators/scaffold",

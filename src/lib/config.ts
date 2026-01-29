@@ -136,3 +136,26 @@ export function getDbPath(): string {
 export function resetProjectConfig(): void {
   cachedProjectConfig = null;
 }
+
+export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+
+/**
+ * Detect package manager from lockfiles.
+ */
+export function detectPackageManager(): PackageManager {
+  const cwd = process.cwd();
+
+  if (fs.existsSync(path.join(cwd, "bun.lockb"))) return "bun";
+  if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
+  if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
+  return "npm";
+}
+
+/**
+ * Get the run command for scripts based on package manager.
+ * e.g., "npm run" / "pnpm" / "yarn" / "bun"
+ */
+export function getRunCommand(): string {
+  const pm = detectPackageManager();
+  return pm === "npm" ? "npm run" : pm;
+}

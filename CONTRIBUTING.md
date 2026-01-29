@@ -32,6 +32,12 @@ brizzle/
 ├── src/
 │   ├── index.ts              # CLI entry point
 │   ├── generators/           # Code generation modules
+│   │   ├── init.ts           # Drizzle ORM setup wizard
+│   │   ├── init/             # Init submodules
+│   │   │   ├── types.ts      # Driver types and options
+│   │   │   ├── drivers.ts    # Driver configurations
+│   │   │   ├── templates.ts  # File content generators
+│   │   │   └── prompts.ts    # Interactive prompts
 │   │   ├── model.ts          # Schema model generation
 │   │   ├── actions.ts        # Server actions generation
 │   │   ├── scaffold.ts       # Full CRUD scaffolding
@@ -74,6 +80,10 @@ npm link
 Then in a test Next.js project:
 
 ```bash
+# Test the init wizard
+brizzle init --dry-run
+
+# Test scaffolding
 brizzle scaffold post title:string body:text --dry-run
 ```
 
@@ -149,6 +159,15 @@ Use clear, descriptive commit messages:
 3. Add the command to `src/index.ts`
 4. Add tests in `src/generators/tests/`
 5. Update documentation
+
+### Adding a New Database Driver
+
+1. Add the driver to the `Driver` type in `src/generators/init/types.ts`
+2. Add driver configuration to `DRIVERS` in `src/generators/init/drivers.ts`
+3. Add client template function in `src/generators/init/templates.ts`
+4. Add case to `generateDbClient()` switch statement
+5. Add tests in `src/generators/tests/init-*.test.ts`
+6. Update documentation
 
 ## Testing Guidelines
 

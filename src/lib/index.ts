@@ -18,6 +18,9 @@ export {
   getAppPath,
   getDbPath,
   resetProjectConfig,
+  detectPackageManager,
+  getRunCommand,
+  type PackageManager,
 } from "./config";
 
 // Logger

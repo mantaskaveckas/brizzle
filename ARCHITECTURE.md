@@ -14,7 +14,7 @@ Brizzle follows a layered architecture with clear separation of concerns:
                   │
 ┌─────────────────▼───────────────────────────┐
 │           Generator Layer (generators/)      │
-│    model, actions, scaffold, resource, api   │
+│  init, model, actions, scaffold, resource, api│
 └─────────────────┬───────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────┐
@@ -86,6 +86,33 @@ type Dialect = "sqlite" | "postgresql" | "mysql";
 
 ## Data Flow
 
+### Init Command
+
+When a user runs `brizzle init`:
+
+```
+1. CLI Layer
+   └─> Parse command arguments (Commander.js)
+   └─> Call generateInit()
+
+2. Generator Layer (init.ts)
+   └─> runInitPrompts() - interactive @clack/prompts wizard
+       └─> Select dialect (sqlite/postgresql/mysql)
+       └─> Select driver (better-sqlite3, postgres, mysql2, etc.)
+       └─> Configure paths and options
+   └─> createFiles() - generates configuration files
+       └─> drizzle.config.ts
+       └─> db/index.ts (database client)
+       └─> db/schema.ts (empty schema)
+       └─> .env.example (optional)
+       └─> docker-compose.yml (optional)
+   └─> addScriptsToPackageJson() - adds db:* scripts
+   └─> installDependencies() - runs npm/pnpm/yarn install
+   └─> showSummary() - displays next steps
+```
+
+### Scaffold Command
+
 When a user runs `brizzle scaffold post title:string body:text`:
 
 ```
@@ -122,6 +149,8 @@ When a user runs `brizzle scaffold post title:string body:text`:
 
 | Module | Responsibility |
 |--------|---------------|
+| `init.ts` | Interactive Drizzle ORM setup wizard |
+| `init/` | Init submodules (types, drivers, templates, prompts) |
 | `model.ts` | Generates Drizzle schema table definitions |
 | `actions.ts` | Generates Next.js server actions (CRUD) |
 | `scaffold.ts` | Orchestrates full CRUD generation |
@@ -143,6 +172,27 @@ When a user runs `brizzle scaffold post title:string body:text`:
 | `parsing.ts` | Field definition parsing |
 | `files.ts` | File system operations |
 | `logger.ts` | Colored console output |
+
+## Init Module Architecture
+
+The `init` generator has a modular structure for maintainability:
+
+```
+src/generators/
+├── init.ts              # Main entry point, orchestration
+└── init/
+    ├── types.ts         # Driver, InitOptions, DriverConfig interfaces
+    ├── drivers.ts       # DRIVERS registry, getDriverConfig(), etc.
+    ├── templates.ts     # File content generators (config, client, schema)
+    └── prompts.ts       # @clack/prompts interactive flow, utilities
+```
+
+| Module | Responsibility |
+|--------|---------------|
+| `types.ts` | Type definitions for drivers and options |
+| `drivers.ts` | Driver configurations for 10 supported drivers |
+| `templates.ts` | Template generators for all output files |
+| `prompts.ts` | Interactive prompts, dependency installation, summary |
 
 ## Design Patterns
 

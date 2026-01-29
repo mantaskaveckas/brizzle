@@ -8,6 +8,30 @@ sidebar_position: 5
 
 ## Commands
 
+### `brizzle init`
+
+Interactive setup wizard for Drizzle ORM configuration.
+
+```bash
+brizzle init
+```
+
+**Options:**
+- `--dialect <dialect>` - Database dialect (sqlite, postgresql, mysql) for non-interactive mode
+- `--driver <driver>` - Database driver for non-interactive mode
+- `--no-install` - Skip automatic dependency installation
+
+**Example:**
+```bash
+# Interactive mode
+brizzle init
+
+# Non-interactive mode
+brizzle init --dialect postgresql --driver postgres
+```
+
+---
+
 ### `brizzle model`
 
 Creates a Drizzle schema model.
